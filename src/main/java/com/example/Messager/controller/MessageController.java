@@ -56,4 +56,20 @@ public class MessageController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+
+    @DeleteMapping("/delete-message")
+    public ResponseEntity<?> deleteMessage(@RequestParam Long messageId){
+        try{
+            if(!messageRepository.existsById(messageId))
+                return ResponseEntity.badRequest().body("{\"status\":\"error\", \"message\":\"Message not found\"}");
+            messageRepository.deleteById(messageId);
+            return ResponseEntity.ok().body("{\"status\":\"success\", \"message\":\"Message deleted\"}");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"status\":\"error\", \"message\":\"Error: " + e.getMessage() + "\"}");
+        }
+
+
+    }
+
+
 }
