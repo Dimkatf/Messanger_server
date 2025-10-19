@@ -53,7 +53,6 @@ public class UserController {
                 return ResponseEntity.badRequest().body("{\"status\":\"error\", \"message\":\"User not found\"}");
             }
 
-            // ★★★★ ИСПОЛЬЗУЕМ АБСОЛЮТНЫЙ ПУТЬ ★★★★
             String uploadDir = System.getProperty("user.dir") + "/uploads/";
             File uploadsDir = new File(uploadDir);
 
@@ -64,7 +63,6 @@ public class UserController {
                 System.out.println("🖥️ Directory created: " + created);
             }
 
-            // Сохраняем файл на диск
             String filename = phone + "_" + System.currentTimeMillis() + ".jpg";
             File file = new File(uploadsDir, filename);
 
@@ -75,7 +73,6 @@ public class UserController {
             System.out.println("🖥️ File saved: " + file.exists());
             System.out.println("🖥️ File size on disk: " + file.length());
 
-            // Сохраняем только имя файла в БД
             user.setPhotoFilename(filename);
             userRepository.save(user);
 
@@ -141,7 +138,6 @@ public class UserController {
 
             System.out.println("Login successful - User: " + user.getName());
 
-            // Добавляем фото в ответ если есть
             String photoInfo = user.getPhotoFilename() != null ? "|HAS_PHOTO" : "|NO_PHOTO";
             return ResponseEntity.ok("LOGIN_SUCCESS|" + user.getId() + "|" + user.getName() + "|" + user.getPhone() + photoInfo);
 
@@ -151,12 +147,13 @@ public class UserController {
         }
     }
 
+
+
     @GetMapping("/users")
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
 
-    // DTO классы
     public static class UpdateNameRequest {
         private String phone;
         private String newName;

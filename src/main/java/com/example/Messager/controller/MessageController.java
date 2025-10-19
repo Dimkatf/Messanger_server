@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -67,8 +68,20 @@ public class MessageController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("{\"status\":\"error\", \"message\":\"Error: " + e.getMessage() + "\"}");
         }
-
-
+    }
+    @PutMapping("update_message")
+    public ResponseEntity<?> update_message(@RequestBody UpdateMessageDTO updateMessageDTO){
+        try {
+            Optional<Message> optionalMessage = messageRepository.findById(updateMessageDTO.getId());
+            if(!optionalMessage.isPresent())
+                return ResponseEntity.badRequest().body("Сообщение не найдено!");
+            Message message = optionalMessage.get();
+            message.setText(updateMessageDTO.getNewText());
+            messageRepository.save(message);
+            return ResponseEntity.ok().body("Сообщение обновлено!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Ошибка: " + e.getMessage());
+        }
     }
 
 
