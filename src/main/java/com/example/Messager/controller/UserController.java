@@ -94,7 +94,6 @@ public class UserController {
                 return ResponseEntity.notFound().build();
             }
 
-            // Читаем файл с диска
             File file = new File("uploads/" + user.getPhotoFilename());
             if (!file.exists()) {
                 return ResponseEntity.notFound().build();
@@ -120,6 +119,18 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/delete_user")
+    public ResponseEntity<?> deleteUser(@RequestParam Long userId) {
+        try {
+            if (!userRepository.existsById(userId)) {
+                return ResponseEntity.badRequest().body("Пользователь не найден");
+            }
+            userRepository.deleteById(userId);
+            return ResponseEntity.ok().body("Пользователь успешно удален");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Ошибка: " + e.getMessage());
+        }
+    }
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody Map<String, String> loginData) {
         try {
