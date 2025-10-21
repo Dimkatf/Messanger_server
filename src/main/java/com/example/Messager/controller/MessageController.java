@@ -77,12 +77,14 @@ public class MessageController {
                 return ResponseEntity.badRequest().body("Сообщение не найдено!");
             Message message = optionalMessage.get();
             message.setText(updateMessageDTO.getNewText());
+            message.setEdited(true);
             messageRepository.save(message);
             return ResponseEntity.ok().body("Сообщение обновлено!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Ошибка: " + e.getMessage());
         }
     }
+
 
 
 }
