@@ -2,6 +2,8 @@ package com.example.Messager.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "messages")
 public class Message {
@@ -14,11 +16,18 @@ public class Message {
     @Column(name = "is_edited")
     private boolean isEdited;
 
-    public Message(){}
-    public Message(String chatId, String sender, String text){
+
+    @Column
+    private LocalDateTime timestamp;
+
+    public Message(){
+        this.timestamp = LocalDateTime.now();
+    }
+    public Message(String chatId, String sender,String text){
         this.chatId = chatId;
         this.sender = sender;
         this.text = text;
+        this.timestamp = LocalDateTime.now();
         this.isEdited = false;
     }
 
@@ -32,4 +41,6 @@ public class Message {
     public void setText(String text) {this.text = text;}
     public boolean isEdited() { return isEdited; }
     public void setEdited(boolean edited) { isEdited = edited; }
+    public LocalDateTime getTimestamp() {return timestamp;}
+    public void setTimestamp(LocalDateTime timestamp) {this.timestamp = timestamp;}
 }

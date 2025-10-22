@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByChatIdOrderByIdAsc(String chatId);
-    //List<Message> findByIsFavoriteTrue();
+    List<Message> findByChatIdOrderByTimestampAsc(String chatId);
 }

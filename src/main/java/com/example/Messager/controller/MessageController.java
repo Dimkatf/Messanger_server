@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -31,8 +28,24 @@ public class MessageController {
         }
     }
     @GetMapping("/get-messages")
-    public List<Message> getMessages(@RequestParam String chatId){
-        return messageRepository.findByChatIdOrderByIdAsc(chatId);
+    public ResponseEntity<?> getMessages(@RequestParam String chatId) {
+        try {
+            List<Message> messages = messageRepository.findByChatIdOrderByTimestampAsc(chatId);
+            List<Map<String, Object>> response = new ArrayList<>();
+            for (Message message : messages) {
+                Map<String, Object> messageMap = new HashMap<>();
+                messageMap.put("id", message.getId());
+                messageMap.put("text", message.getText());
+                messageMap.put("edited", message.isEdited());
+                messageMap.put("timestamp", message.getTimestamp().toString());
+                messageMap.put("chatId", message.getChatId());
+                response.add(messageMap);
+            }
+
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Ошибка: " + e.getMessage());
+        }
     }
     @GetMapping("/get-last-message")
     public ResponseEntity<Map<String, String>> getLastMessage(@RequestParam String chatId){
@@ -43,17 +56,23 @@ public class MessageController {
             if(messages.isEmpty()) {
                 response.put("status", "success");
                 response.put("message", "Нет сообщений");
+                response.put("timestamp", "");
             } else {
                 Message lastMessage = messages.get(messages.size()-1);
                 response.put("status", "success");
                 response.put("message", lastMessage.getText());
+                if (lastMessage.getTimestamp() != null) {
+                    response.put("timestamp", lastMessage.getTimestamp().toString());
+                } else {
+                    response.put("timestamp", "");
+                }
             }
-
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("status", "error");
             response.put("message", "Ошибка: " + e.getMessage());
+            response.put("timestamp", "");
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -62,11 +81,11 @@ public class MessageController {
     public ResponseEntity<?> deleteMessage(@RequestParam Long messageId){
         try{
             if(!messageRepository.existsById(messageId))
-                return ResponseEntity.badRequest().body("{\"status\":\"error\", \"message\":\"Message not found\"}");
+                return ResponseEntity.badRequest().body("Ошибка");
             messageRepository.deleteById(messageId);
-            return ResponseEntity.ok().body("{\"status\":\"success\", \"message\":\"Message deleted\"}");
+            return ResponseEntity.ok().body("Сообщение удалено");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"status\":\"error\", \"message\":\"Error: " + e.getMessage() + "\"}");
+            return ResponseEntity.badRequest().body("Ошибка: " + e.getMessage());
         }
     }
     @PutMapping("update_message")
@@ -84,7 +103,4 @@ public class MessageController {
             return ResponseEntity.badRequest().body("Ошибка: " + e.getMessage());
         }
     }
-
-
-
 }
