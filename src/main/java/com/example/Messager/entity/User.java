@@ -14,6 +14,9 @@ public class User {
     private String password;
     private String photoFilename;
 
+    @Column(nullable = true, name = "user_name")
+    private String userName;
+
     public User() {}
 
     public User(String name, String phone, String password) {
@@ -32,6 +35,8 @@ public class User {
     public void setPassword(String password) {this.password = password;}
     public String getPhotoFilename() {return photoFilename;}
     public void setPhotoFilename(String photoFilename) {this.photoFilename = photoFilename;}
+    public String getUserName() {return userName;}
+    public void setUserName(String userName) {this.userName = userName;}
 
     @Override
     public String toString() {
@@ -40,6 +45,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", photoFilename='" + photoFilename + '\'' +
+                ", userName= '" + userName + '\'' +
                 '}';
     }
 }

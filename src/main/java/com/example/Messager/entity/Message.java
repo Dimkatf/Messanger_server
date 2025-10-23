@@ -15,8 +15,6 @@ public class Message {
     private String text;
     @Column(name = "is_edited")
     private boolean isEdited;
-
-
     @Column
     private LocalDateTime timestamp;
 

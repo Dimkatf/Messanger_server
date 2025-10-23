@@ -27,9 +27,25 @@ public class UserService {
             System.out.println("Saving user...");
             userRepository.save(user);
             System.out.println("✅ User saved successfully!");
+        } else throw new RuntimeException("User not found with phone: " + phone);
+
+    }
+    public void addUserName(String phone, String userName) {
+        System.out.println("🔍 addUserName called - phone: " + phone + ", username: " + userName);
+
+        User user = userRepository.findByPhone(phone);
+        if (user != null) {
+            System.out.println("🔍 User found: " + user.getId() + ", current username: " + user.getUserName());
+            user.setUserName(userName);
+            userRepository.save(user);
+
+            System.out.println("🔍 After save - new username: " + user.getUserName());
+
+            User updatedUser = userRepository.findByPhone(phone);
+            System.out.println("🔍 Verification - username in DB: " + updatedUser.getUserName());
         } else {
-            System.out.println("❌ User not found!");
-            throw new RuntimeException("User not found with phone: " + phone);
+            System.out.println("❌ User not found with phone: " + phone);
+            throw new RuntimeException("Не найден пользователь с телефоном: " + phone);
         }
     }
 }

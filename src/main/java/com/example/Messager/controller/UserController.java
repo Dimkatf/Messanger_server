@@ -86,6 +86,22 @@ public class UserController {
         }
     }
 
+    @PutMapping("/add_userName")
+    public ResponseEntity<?> addUserName(@RequestBody UpdateUserNameRequest request){
+        try {
+            userService.addUserName(request.getPhone(), request.getNewUserName());
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("message", "UserName успешно обновлен!");
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "error");
+            response.put("message", "Ошибка обновления UserName: " + e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
     @GetMapping("/user-photo")
     public ResponseEntity<byte[]> getUserPhoto(@RequestParam String phone) {
         try {
