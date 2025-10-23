@@ -80,12 +80,24 @@ public class MessageController {
     @DeleteMapping("/delete-message")
     public ResponseEntity<?> deleteMessage(@RequestParam Long messageId){
         try{
-            if(!messageRepository.existsById(messageId))
-                return ResponseEntity.badRequest().body("Ошибка");
+            if(!messageRepository.existsById(messageId)) {
+                Map<String, String> response = new HashMap<>();
+                response.put("status", "error");
+                response.put("message", "Сообщение не найдено");
+                return ResponseEntity.badRequest().body(response);
+            }
+
             messageRepository.deleteById(messageId);
-            return ResponseEntity.ok().body("Сообщение удалено");
+
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("message", "Сообщение удалено");
+            return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Ошибка: " + e.getMessage());
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "error");
+            response.put("message", "Ошибка: " + e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
     @PutMapping("update_message")

@@ -166,7 +166,7 @@ public class UserController {
             System.out.println("Login successful - User: " + user.getName());
 
             String photoInfo = user.getPhotoFilename() != null ? "|HAS_PHOTO" : "|NO_PHOTO";
-            return ResponseEntity.ok("LOGIN_SUCCESS|" + user.getId() + "|" + user.getName() + "|" + user.getPhone() + photoInfo);
+            return ResponseEntity.ok("LOGIN_SUCCESS|" + user.getId() + "|" + user.getName() + "|" + user.getPhone() + "|" + user.getUserName() + "|"+ photoInfo);
 
         } catch (Exception e) {
             System.out.println("Server error: " + e.getMessage());
