@@ -48,5 +48,8 @@ public class UserService {
             throw new RuntimeException("Не найден пользователь с телефоном: " + phone);
         }
     }
+    public User findUserByUsername(String userName){
+        return userRepository.findByUserName(userName);
+    }
 }
 

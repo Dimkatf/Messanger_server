@@ -4,6 +4,7 @@ import com.example.Messager.entity.User;
 import com.example.Messager.repository.UserRepository;
 import com.example.Messager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -171,6 +172,20 @@ public class UserController {
         } catch (Exception e) {
             System.out.println("Server error: " + e.getMessage());
             return ResponseEntity.ok("LOGIN_FAILED");
+        }
+    }
+
+    @GetMapping("/findUserByUserName")
+    public ResponseEntity<?> findUserByUsername(@RequestParam String userName) {
+        try {
+            User user = userService.findUserByUsername(userName);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Пользователь не найден");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Ошибка поиска: " + e.getMessage());
         }
     }
 
