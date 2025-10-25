@@ -12,5 +12,4 @@ public class MessagerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MessagerApplication.class, args);
 	}
-
 }
